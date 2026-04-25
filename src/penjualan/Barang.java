@@ -44,7 +44,7 @@ public class Barang extends javax.swing.JFrame {
     }
    protected void datatable() {
     Object[] baris = {"ID Barang", "Nama", "Jenis", "Harga Beli", "Harga Jual"};
-     tabmode = new DefaultTableModel(null, baris); // ✅ pakai field global
+     tabmode = new DefaultTableModel(null, baris); 
     String cariitem = txtcari.getText();
 
     try {
