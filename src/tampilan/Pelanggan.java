@@ -39,7 +39,7 @@ public class Pelanggan extends javax.swing.JFrame {
     }
    private void datatable() {
     Object[] baris = {"ID Pelanggan", "Nama", "Jenis Kelamin", "No. Telepon", "Alamat"};
-     tabmode = new DefaultTableModel(null, baris); // ✅ pakai field global
+     tabmode = new DefaultTableModel(null, baris); 
     String cariitem = txtcari.getText();
 
     try {
