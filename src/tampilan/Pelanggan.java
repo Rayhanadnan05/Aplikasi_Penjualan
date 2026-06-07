@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyEvent;
 import koneksi.koneksi;
+import javax.swing.*;
+
 
 public class Pelanggan extends javax.swing.JFrame {
     private final Connection conn = new koneksi().connect();
@@ -36,6 +38,7 @@ public class Pelanggan extends javax.swing.JFrame {
         txtalamat.setText("");
         txtcari.setText("");
         buttonGroup1.clearSelection();
+        
     }
    private void datatable() {
     Object[] baris = {"ID Pelanggan", "Nama", "Jenis Kelamin", "No. Telepon", "Alamat"};
@@ -60,6 +63,54 @@ public class Pelanggan extends javax.swing.JFrame {
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Data gagal dipanggil: " + e.getMessage());
+    }
+   }
+   
+   private void cetakSemuaPelanggan() {
+    try {
+        String sql = "SELECT id_pelanggan, nama_pelanggan,no_telp FROM pelanggan ORDER BY id ASC";
+        PreparedStatement stat = conn.prepareStatement(sql);
+        ResultSet hasil = stat.executeQuery();
+
+        StringBuilder isi = new StringBuilder();
+        isi.append("==============================\n");
+        isi.append("      DAFTAR PELANGGAN        \n");
+        isi.append("==============================\n");
+        isi.append(String.format("%-12s %-20s %-15s\n", "ID", "Nama", "No. Telp"));
+        isi.append("------------------------------\n");
+
+        int no = 1;
+        while (hasil.next()) {
+            isi.append(String.format("%-3d %-12s %-20s %-15s\n",
+                no++,
+                hasil.getString("id_pelanggan"),
+                hasil.getString("nama_pelanggan"),
+                hasil.getString("no_telp")
+            ));
+        }
+
+        isi.append("==============================\n");
+        isi.append("  Total: " + (no - 1) + " Pelanggan\n");
+        isi.append("==============================\n");
+
+        JTextArea textArea = new JTextArea(isi.toString());
+        textArea.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 12));
+        textArea.setEditable(false);
+
+        JScrollPane scroll = new JScrollPane(textArea);
+        scroll.setPreferredSize(new java.awt.Dimension(450, 400));
+
+        int opsi = JOptionPane.showConfirmDialog(
+            null, scroll, "Preview Daftar Semua Pelanggan",
+            JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (opsi == JOptionPane.OK_OPTION) {
+            textArea.print();
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Gagal cetak: " + e.getMessage());
     }
 }
     /**
@@ -94,6 +145,7 @@ public class Pelanggan extends javax.swing.JFrame {
         txtid = new javax.swing.JTextField();
         bbatal = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
+        bCetak = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -170,6 +222,9 @@ public class Pelanggan extends javax.swing.JFrame {
 
         jLabel8.setText("Cari Data Pelanggan");
 
+        bCetak.setText("Cetak");
+        bCetak.addActionListener(this::bCetakActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -219,7 +274,9 @@ public class Pelanggan extends javax.swing.JFrame {
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtcari))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(bcari)))
+                        .addComponent(bcari)
+                        .addGap(57, 57, 57)
+                        .addComponent(bCetak)))
                 .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
@@ -256,12 +313,17 @@ public class Pelanggan extends javax.swing.JFrame {
                     .addComponent(bbatal)
                     .addComponent(bkeluar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtcari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bcari))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtcari, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bcari))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(bCetak)
+                        .addGap(15, 15, 15)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(85, Short.MAX_VALUE))
         );
@@ -391,6 +453,10 @@ public class Pelanggan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtnmActionPerformed
 
+    private void bCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCetakActionPerformed
+        cetakSemuaPelanggan();        // TODO add your handling code here:
+    }//GEN-LAST:event_bCetakActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -417,6 +483,7 @@ public class Pelanggan extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCetak;
     private javax.swing.JButton bbatal;
     private javax.swing.JButton bcari;
     private javax.swing.JButton bhapus;
