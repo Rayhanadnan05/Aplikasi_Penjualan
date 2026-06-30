@@ -6,11 +6,8 @@ package penjualan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import koneksi.koneksi;
-import penjualan.Nota;    // sesuaikan package
-import penjualan.UserID;
 public class login extends javax.swing.JFrame {
     private final Connection conn = new koneksi().connect();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());

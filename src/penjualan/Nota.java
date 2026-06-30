@@ -28,9 +28,8 @@ private DefaultTableModel tabmode;
 
     public Nota() {
         initComponents();
-        jidkasir.setText(UserID.getIdKasir()); // isi id kasir
+        jidkasir.setText(UserID.getIdKasir()); 
         jnm.setText(UserID.getUserLogin());
-        
         kosong();
         aktif();
         autonumber();
