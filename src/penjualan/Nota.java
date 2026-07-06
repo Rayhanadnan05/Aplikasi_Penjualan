@@ -3,12 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package penjualan;
+import java.io.InputStream;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JSpinner;
 import koneksi.koneksi;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 
 public class Nota extends javax.swing.JFrame {
@@ -21,7 +28,7 @@ private DefaultTableModel tabmode;
 
     public Nota() {
         initComponents();
-        jidkasir.setText(UserID.getIdKasir()); // isi id kasir
+        jidkasir.setText(UserID.getIdKasir()); 
         jnm.setText(UserID.getUserLogin());
         kosong();
         aktif();
@@ -60,6 +67,7 @@ private DefaultTableModel tabmode;
         txthj.setText("");
         txtqty.setText("");
         txttotal.setText("");
+        txtttotal.setText("");
     }
     
     protected void autonumber(){
@@ -115,6 +123,18 @@ private DefaultTableModel tabmode;
         }
         txtttotal.setText(Integer.toString(total));
     }
+    
+    public void cetak(){
+        try{
+            String path="C:\\NetBeansProjects\\Aplikasi_Penjualan\\src\\penjualan\\NotaReports.jasper";
+            HashMap parameter = new HashMap();
+            parameter.put("no_faktur",txtidnota.getText());
+            JasperPrint Print = JasperFillManager.fillReport(path,parameter,conn);
+            JasperViewer.viewReport(Print, false);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "Dokumen TIdak Ada"+ex);
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -166,6 +186,7 @@ private DefaultTableModel tabmode;
         jLabel10 = new javax.swing.JLabel();
         jnm = new javax.swing.JLabel();
         jidkasir = new javax.swing.JLabel();
+        btncetak = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -407,6 +428,9 @@ private DefaultTableModel tabmode;
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
+        btncetak.setText("Cetak");
+        btncetak.addActionListener(this::btncetakActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -468,6 +492,8 @@ private DefaultTableModel tabmode;
                             .addComponent(bbatal)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(bkeluar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btncetak)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel20)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -486,20 +512,22 @@ private DefaultTableModel tabmode;
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel10)
-                            .addComponent(jidkasir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jidkasir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel10)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(txtidnota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel4)
-                            .addComponent(jnm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jnm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel21)
+                                .addComponent(jLabel4)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
@@ -520,7 +548,8 @@ private DefaultTableModel tabmode;
                     .addComponent(bbatal)
                     .addComponent(bkeluar)
                     .addComponent(jLabel20)
-                    .addComponent(txtttotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtttotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btncetak))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -574,9 +603,10 @@ private DefaultTableModel tabmode;
         try{
             PreparedStatement stat = conn.prepareStatement(sql);
             stat.setString(1, txtidnota.getText());
-            stat.setString(2, fd);
-            stat.setString(3, txtid.getText());
-            stat.setString(4, jidkasir.getText());
+            stat.setString(2, jidkasir.getText());
+            stat.setString(3, fd);
+            stat.setString(4, txtid.getText());
+            
             
             stat.executeUpdate();
             
@@ -598,6 +628,7 @@ private DefaultTableModel tabmode;
                 stat2.executeUpdate();
             }
             JOptionPane.showMessageDialog(null, "data berhasil disimpan");
+            cetak();
             }catch (SQLException e){
                 JOptionPane.showMessageDialog(null, "data gagal disimpan"+e);
             }
@@ -666,6 +697,30 @@ private DefaultTableModel tabmode;
         hitung();
     }//GEN-LAST:event_btambahActionPerformed
 
+    private void btncetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncetakActionPerformed
+        int row = tbltransaksi.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih data terlebih dahulu!");
+            return;
+        }
+        String noFaktur = tbltransaksi.getValueAt(tbltransaksi.getSelectedRow(), 0).toString();
+        JOptionPane.showMessageDialog(null, "idnota: [" + noFaktur + "]");
+        try {
+            HashMap<String, Object> param = new HashMap<>();
+            param.put("no_faktur", noFaktur);
+
+            InputStream input = getClass().getResourceAsStream(
+                "/penjualan/NotaReports.jasper"
+            );
+            JasperReport jr = (JasperReport) JRLoader.loadObject(input);
+            JasperPrint jp  = JasperFillManager.fillReport(jr, param, conn);
+            JasperViewer.viewReport(jp, false);
+
+            } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal cetak: " + e.getMessage());
+        } 
+    }//GEN-LAST:event_btncetakActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -699,6 +754,7 @@ private DefaultTableModel tabmode;
     private javax.swing.JButton bkeluar;
     private javax.swing.JButton bsimpan;
     private javax.swing.JButton btambah;
+    private javax.swing.JButton btncetak;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
